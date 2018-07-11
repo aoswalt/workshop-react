@@ -113,3 +113,77 @@ React.createElement(
   'Hello, World!'
 )
 ```
+
+## Elementary Composition
+
+Having some text as an element's children is nice for the simple case, but we can do better. HTML elements can contain other elements, and React can too.
+
+A general approach to creating a nav menu is a set of list items in an unordered list.
+
+```html
+<ul>
+  <li>Home</li>
+  <li>Contact</li>
+  <li>About</li>
+</ul>
+```
+
+We can easily do the same in React by using an array of elements as the children.
+
+```javascript
+e('ul', null, [
+  e('li', null, 'Home')
+  e('li', null, 'Contact')
+  e('li', null, 'About')
+])
+```
+
+With the aliased `createElement` method, the React version looks very similar to the raw html version. Alternately, since it is all javascript, we could always store the list items as variables first.
+
+```javascript
+const home = e('li', null, 'Home')
+const contact = e('li', null, 'Contact')
+const about = e('li', null, 'About')
+
+const menu = e('ul', null, [home, contact, about])
+```
+
+Just as with plain html, elements can be nested indefintely. Let's turn the items into links with `a` tags.
+
+```javascript
+const home =
+  e('li', null,
+    e('a', null, 'Home')
+  )
+const contact =
+  e('li', null,
+    e('a', null, 'Contact')
+  )
+const about =
+  e('li', null,
+    e('a', null, 'About')
+  )
+
+const menu = e('ul', null, [home, contact, about])
+```
+
+To make them proper links, we need to give the `a` tags an `href` attribute in the second argument of the function.
+
+```javascript
+const home =
+  e('li', null,
+    e('a', { href: './home' }, 'Home')
+  )
+const contact =
+  e('li', null,
+    e('a', { href: './contact' }, 'Contact')
+  )
+const about =
+  e('li', null,
+    e('a', { href: './about' }, 'About')
+  )
+
+const menu = e('ul', null, [home, contact, about])
+```
+
+Just like regular html, we have the makings of a simple nav menu.
