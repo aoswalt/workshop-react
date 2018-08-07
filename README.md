@@ -186,4 +186,31 @@ const about =
 const menu = e('ul', null, [home, contact, about])
 ```
 
-Just like regular html, we have the makings of a simple nav menu.
+Just like regular HTML, we have the makings of a simple nav menu.
+
+## Props and Components
+
+A terminology note: The object of properties given to an element translates to the `attributes` on an HTML element. Within React, these are known as `props`.
+
+So far, we have a standard looking set of HTML elements to build a simple nav menu. Because this is javascript, we can extract the common parts into a function to simplify the repetition.
+
+Let's make a `NavItem` function that wraps the `li` and `a` tags together. If we provide the arguments as an object, we can keep them explicitly labeled. To make the anchor tag, a NavItem needs to take 2 props: an href and a label.
+
+```javascript
+// destructuring the props in the function parameter
+const NavItem = ({ href, label }) =>
+  e('li', null,
+    e('a', { href }, label)
+  )
+
+const home = NavItem({ href: './home', label: 'Home' })
+const contact = NavItem({ href: './contact', label: 'Contact' })
+const about = NavItem({ href: './about', label: 'About' })
+
+// the menu doesn't care that the elements were created with components
+const menu = e('ul', null, [home, contact, about])
+```
+
+`NavItem` is our first `component`. Fundamentally, a component takes an object of arguments (known as props) and returns a number of elements or other components. In this simplified form, known as a functional component, that is all that is involved with a component.
+
+Components are one of the core parts of react. They allow you to group related logic and design into reusable and composable pieces. As we will see later, components can be expanded to have more behaviour if needed, but the simple functional form remains at the core.
