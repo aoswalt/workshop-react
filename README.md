@@ -19,8 +19,8 @@ React elements are the building blocks of a React application. Conceptually, the
 To create your first React elements, first, add a couple of script tags to your `index.html` file, one for react and the other for react-dom.
 
 ```html
-<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 ```
 
 Next, add a div with an id that you can reference.
@@ -214,3 +214,71 @@ const menu = e('ul', null, [home, contact, about])
 `NavItem` is our first `component`. Fundamentally, a component takes an object of arguments (known as props) and returns a number of elements or other components. In this simplified form, known as a functional component, that is all that is involved with a component.
 
 Components are one of the core parts of react. They allow you to group related logic and design into reusable and composable pieces. As we will see later, components can be expanded to have more behaviour if needed, but the simple functional form remains at the core.
+
+
+## Babeling about JSX
+
+Creating elements with an aliased createElement function is straightforward, but wouldn't it be easier if we could write them as HTML? HTML is not valid inside of JavaScript, but we can use babel to expand JavaScript's capabilities, including making use of JSX.
+
+In a project, you would set up a build pipeline to compile our JSX-filled, non-standard JavaScript into standard JavaScript; however, we can use a script tag to do the compilation on page load.
+
+Add another script tag with the React ones.
+
+```html
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+```
+
+Change the opening script tag around our JavaScript to include a type of `text/babel`.
+
+```html
+<script type="text/babel">
+```
+
+Now, our javascript will not be run by the browser directly; instead, Babel will take over its execution. React includes configuration to translate JSX into calls to createElement.
+
+Working from top down, we can rewrite our nav menu to make use of JSX.
+
+First, the NavItem component can return HTML as JSX tags. Note: within JSX, variables and direct JavaScript code must be wrapped in curly braces.
+
+```jsx
+const NavItem = ({ href, label }) =>
+  <li>
+    <a href={href}>{label}</a>
+  </li>
+```
+
+If we continue storing our components as simple variables, we must use curly braces to insert them into the list.
+
+```jsx
+const home = <NavItem href="./home" label="Home" />
+const contact = <NavItem href="./contact" label="Contact" />
+const about = <NavItem href="./about" label="About" />
+```
+
+```jsx
+const menu =
+  <ul>
+    {home}
+    {contact}
+    {about}
+  </ul>
+```
+
+Instead, if we instead write them as components, we use them as their own JSX tags, just like native elements. Note: any custom component should begin with a capital letter to distinguish it from the native elements.
+
+```jsx
+const Home = () => <NavItem href="./home" label="Home" />
+const Contact = () => <NavItem href="./contact" label="Contact" />
+const About = () => <NavItem href="./about" label="About" />
+```
+
+Now, we can build the menu with our custom components but write them as JSX tags.
+
+```jsx
+const menu =
+  <ul>
+    <Home />
+    <Contact />
+    <About />
+  </ul>
+```
