@@ -282,3 +282,86 @@ const menu =
     <About />
   </ul>
 ```
+
+## Getting Stateful
+
+So far, we have been creating stateless functional components: they are functions that take in data as props and return React elements. One thing we cannot do is keep track of data changes. For that, we need class components.
+
+Class components extend `React.Component` and define a `render` method that returns the resulting elements. Instead of being given props in the method's arguments as with a functional component, props are accessed directly as `this.props`.
+
+---
+
+Let's make a toggle button.
+
+First, we should create a simple component that wraps a button.
+
+```jsx
+class ToggleButton extends React.Component {
+  render() {
+    return (
+      <button>OK</button>
+    )
+  }
+}
+```
+
+State must be a plain JavaScript object. With newer JavaScript syntax support, we can directly set state with a class property. Originally, it needed to be done in the class's constructor.
+
+Let's track the status with a boolean `value` attribute and default it to `false`.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  render() {
+    return (
+      <button>OK</button>
+    )
+  }
+}
+```
+
+We can use a simple ternary to change the button's text to reflect the value of the toggle.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  render() {
+    return (
+      <button>{this.state.value ? 'Yes' : 'No'}</button>
+    )
+  }
+}
+```
+
+We can pass a function to the button's `onClick` prop to update our state. Because another element will be calling the function, it must be bound to the current instance of the component; the easiest way to do so is to use an arrow function.
+
+To update state in React, we must use the `this.setState` function (not update state directly) and provide it the desired changes to state. If the changes do not depend on the current state, you can directly pass an object of the changes you want. If the changes depend on current state, you should **ALWAYS** use the functional version of setState that takes the previous state as its first argument. State changes may be asynchronous and batched, so referencing `this.state` for changes may result in unexpected and hard to detect errors. The React documentation has more [detailed information](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous).
+
+For the ToggleButton, we want to toggle state based on previous state. We can create a simple function on the component and pass it to the button.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  toggle = () =>
+    this.setState(({ value }) => ({ value: !value }))
+
+  render() {
+    return (
+      <button onClick={this.toggle}>
+        {this.state.value ? 'Yes' : 'No'}
+      </button>
+    )
+  }
+}
+```
+
+We now have a simple button that maintains state and can toggle between its states, but we do not yet have external access to that state.
