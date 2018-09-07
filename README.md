@@ -365,3 +365,195 @@ class ToggleButton extends React.Component {
 ```
 
 We now have a simple button that maintains state and can toggle between its states, but we do not yet have external access to that state.
+
+## Sharing with Others
+
+State inside of a React component cannot be accessed from outside of it unless the component accepts related props or passes its state to its children.
+
+Let's make use of the button and by adding a label that reflects the status of the button and sits beside it. We can call this a `LabeledToggle`.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  toggle = () =>
+    this.setState(({ value }) => ({ value: !value }))
+
+  render() {
+    return (
+      <button onClick={this.toggle}>
+        {this.state.value ? 'Yes' : 'No'}
+      </button>
+    )
+  }
+}
+
+class LabeledToggle extends React.Component {
+  render() {
+    const value = false
+
+    return (
+      <div>
+        <span>{value ? 'Yes' : 'No'}</span>
+        <ToggleButton />
+      </div>
+    )
+  }
+}
+```
+
+Now, we have a label that should be reflecting the state of the button, but we cannot react into the button to read its state. We need to track the state within the `LabeledToggle` so that we can pass it to the label. We also need a function similar to the Button's `toggle` that can update the state. Let's call it `updateValue` to be explicit.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  toggle = () =>
+    this.setState(({ value }) => ({ value: !value }))
+
+  render() {
+    return (
+      <button onClick={this.toggle}>
+        {this.state.value ? 'Yes' : 'No'}
+      </button>
+    )
+  }
+}
+
+class LabeledToggle extends React.Component {
+  state = {
+    value: false,
+  }
+
+  updateValue = value =>
+    this.setState({ value })
+
+  render() {
+    return (
+      <div>
+        <span>{this.state.value ? 'Yes' : 'No'}</span>
+        <ToggleButton />
+      </div>
+    )
+  }
+}
+```
+
+To get the data from the button, we need to pass our `updateValue` to the button and have the button call it when its state changes.
+
+Because setting state is asynchronous, we should call the button's passed in function in the callback to `this.setState` if it exists. The second argument to `this.setState` is an optional function to be called once state is fully updated.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  toggle = () =>
+    this.setState(
+      ({ value }) => ({ value: !value }),
+      () => this.props.onChange && this.props.onChange(this.state.value)
+    )
+
+  render() {
+    return (
+      <button onClick={this.toggle}>
+        {this.state.value ? 'Yes' : 'No'}
+      </button>
+    )
+  }
+}
+
+class LabeledToggle extends React.Component {
+  state = {
+    value: false,
+  }
+
+  updateValue = value =>
+    this.setState({ value })
+
+  render() {
+    return (
+      <div>
+        <span>{this.state.value ? 'Yes' : 'No'}</span>
+        <ToggleButton onChange={this.updateValue} />
+      </div>
+    )
+  }
+}
+```
+
+### Taking Full Control
+
+This approach is fine if we want the button to be the source of truth; however, if we take control of the button's value, we can move the source of truth into a place where we have more control. In general, you want to override both the `onChange` and `value` props together for a component.
+
+There are various approaches to changing the control of a component, but one of the most direct is to add some checks about which data to respond to and which functions to call.
+
+```jsx
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  toggle = () => {
+    this.props.onChange === undefined
+      ? this.setState(({ value }) => ({ value: !value }))
+      : this.props.onChange(!this.props.value)
+  }
+
+  render() {
+    const value = this.props.value === undefined
+      ? this.state.value
+      : this.props.value
+
+    return (
+      <button onClick={this.toggle}>
+        {value ? 'Yes' : 'No'}
+      </button>
+    )
+  }
+}
+
+class LabeledToggle extends React.Component {
+  state = {
+    value: false,
+  }
+
+  updateValue = value =>
+    this.setState({ value })
+
+  render() {
+    const { value } = this.state
+
+    return (
+      <div>
+        <span>{value ? 'Yes' : 'No'}</span>
+        <ToggleButton value={value} onChange={this.updateValue} />
+      </div>
+    )
+  }
+}
+```
+
+Now, our `LabeledToggle` maintains the source of truth for the value of the label as well as the button; therefore, we can make changes in different ways while keeping everything in sync.
+
+As a proof of concept, we can test it by adding a rough `onClick` event handler to our label's `span` tag. Note: you generally [should not use a raw arrow function for an event handler](https://reactjs.org/docs/handling-events.html).
+
+```jsx
+render() {
+  const { value } = this.state
+
+  return (
+    <div>
+      <span onClick={() => this.updateValue(!value)}>{value ? 'Yes' : 'No'}</span>
+      <ToggleButton value={value} onChange={this.updateValue} />
+    </div>
+  )
+}
+```
+
+We can now change the same state with the same funciton but by 2 separate sources while keeping one source of truth for the value.
