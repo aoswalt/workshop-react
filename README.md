@@ -557,3 +557,131 @@ render() {
 ```
 
 We can now change the same state with the same funciton but by 2 separate sources while keeping one source of truth for the value.
+
+## Composition Patterns
+
+So far, our custom components have bundled up their presentation and logic with only allowing minimal control to consumers of the component. This is fine for most cases when you know the uses of your component. A component can be designed for more general cases by separating the logic and presentation.
+
+There are numerous methods to exposing control of a component to its user. 3 of the most common are making use of children, adding slots, and render props.
+
+### Children
+
+We have been making use of childen with the native elements, such as the list items of a list.
+
+```html
+<ul>
+  <li>First</li>
+  <li>Second</li>
+  <li>Third</li>
+</ul>
+```
+
+When creating components, we can access the children through the children prop.
+
+As a simple example, if we have a design for a card to be used for items on a page, we can make use of the children prop to allow the user to pass in any elements they want. Let's also add a prop for a card title.
+
+```jsx
+const Card = ({ children, title }) => (
+  <div
+    style={{
+      border: '2px dashed black',
+      flex: '0 0 30%',
+      minHeight: '10rem',
+    }}
+  >
+    <h3 style={{ textAlign: 'center' }}>{title}</h3>
+    <div style={{ margin: '.5rem' }}>
+      {children}
+    </div>
+  </div>
+)
+```
+
+To use it, we simply put any elements we desire between opening and closing `Card` tags.
+
+From a simple `p` tag:
+
+```html
+<Card title='First'>
+  <p>A body of text</p>
+</Card>
+```
+
+To an `img` tag:
+
+```html
+<Card title='First'>
+  <p>A body of text</p>
+</Card>
+```
+
+To an assortment of elements:
+
+```html
+<Card title='Third'>
+  <p>A random assortment</p>
+  <h4>of elements</h4>
+  <p>with varying</p>
+  <h5>types</h5>
+</Card>
+```
+
+Putting it all together:
+
+```html
+<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+  <Card title='First'>
+    <p>A body of text</p>
+  </Card>
+  <Card title='Second'>
+    <img
+      src='https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+      style={{ maxWidth: '100%', maxHeight: '100%' }}
+    />
+  </Card>
+  <Card title='Third'>
+    <p>A random assortment</p>
+    <h4>of elements</h4>
+    <p>with varying</p>
+    <h5>types</h5>
+  </Card>
+</div>
+```
+
+Going further, because the layout of a `Card` and its container are related, we could make the container its own component to treat them as a pair intended to be used together.
+
+```jsx
+const CardContainer = ({ children }) => (
+  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    {children}
+  </div>
+)
+```
+
+Now, the relationship is clear, and the user does not have to be aware of the intended layout of the `Card`s.
+
+```html
+<CardContainer>
+  <Card title='First'>
+    <p>A body of text</p>
+  </Card>
+  <Card title='Second'>
+    <img
+      src='https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+      style={{ maxWidth: '100%', maxHeight: '100%' }}
+    />
+  </Card>
+  <Card title='Third'>
+    <p>A random assortment</p>
+    <h4>of elements</h4>
+    <p>with varying</p>
+    <h5>types</h5>
+  </Card>
+</CardContainer>
+```
+
+Making use of children allows for flexible container elements that do not prescribe their usage and can prevent the need of threading props through layers of specialized components.
+
+### Slots
+
+### Render Prop

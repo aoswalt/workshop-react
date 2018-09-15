@@ -1,0 +1,122 @@
+<html>
+
+<head>
+	<title>Parcel Sandbox</title>
+	<meta charset="UTF-8" />
+
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="app" />
+  <script type="text/babel">
+    const NavItem = ({ href, label }) =>
+      <li>
+        <a href={href}>{label}</a>
+      </li>
+
+    const Home = () => <NavItem href="./home" label="Home" />
+    const Contact = () => <NavItem href="./contact" label="Contact" />
+    const About = () => <NavItem href="./about" label="About" />
+
+    const menu =
+      <ul>
+        <Home />
+        <Contact />
+        <About />
+      </ul>
+
+
+class ToggleButton extends React.Component {
+  state = {
+    value: false,
+  }
+
+  toggle = () => {
+    this.props.onChange === undefined
+      ? this.setState(({ value }) => ({ value: !value }))
+      : this.props.onChange(!this.props.value)
+  }
+
+  render() {
+    const value = this.props.value === undefined
+      ? this.state.value
+      : this.props.value
+
+    return (
+      <button onClick={this.toggle}>
+        {value ? 'Yes' : 'No'}
+      </button>
+    )
+  }
+}
+
+class LabeledToggle extends React.Component {
+  state = {
+    value: false,
+  }
+
+  updateValue = value =>
+    this.setState({ value })
+
+  render() {
+    const { value } = this.state
+
+    return (
+      <div>
+        <span onClick={() => this.updateValue(!value)}>{value ? 'Yes' : 'No'}</span>
+        <ToggleButton value={value} onChange={this.updateValue} />
+      </div>
+    )
+  }
+}
+
+const Card = ({ children, title }) => (
+  <div
+    style={{
+      border: '2px dashed black',
+      flex: '0 0 30%',
+      minHeight: '10rem',
+    }}
+  >
+    <h3 style={{ textAlign: 'center' }}>{title}</h3>
+    <div style={{ margin: '.5rem' }}>
+      {children}
+    </div>
+  </div>
+)
+
+const CardContainer = ({ children }) => (
+  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    {children}
+  </div>
+)
+
+     const App = () => (
+      <CardContainer>
+        <Card title='First'>
+          <p>A body of text</p>
+        </Card>
+        <Card title='Second'>
+          <img
+            src='https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+            style={{ maxWidth: '100%', maxHeight: '100%' }}
+          />
+        </Card>
+        <Card title='Third'>
+          <p>A random assortment</p>
+          <h4>of elements</h4>
+          <p>with varying</p>
+          <h5>types</h5>
+        </Card>
+      </CardContainer>
+     )
+
+    const appContainer = document.querySelector('#app')
+    ReactDOM.render(App(), appContainer)
+  </script>
+</body>
+
+</html>
