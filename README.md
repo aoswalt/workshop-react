@@ -720,3 +720,79 @@ With that simple addition, the user can override the entire header and provide a
 ```
 
 Providing slots for a component allows for separating a different set of concerns to the user.
+
+### Render Props
+
+At times, there is data whose management could be separated from any display aspect.
+
+As a simple example, we could create a simple `Hover` component to encapsulate hover logic.
+
+```jsx
+class Hover extends React.Component {
+  state = { hovering: false }
+
+  onEnter = () => this.setState({ hovering: true })
+  onLeave = () => this.setState({ hovering: false })
+
+  render() {
+    return (
+      <span
+        onMouseEnter={this.onEnter}
+        onMouseLeave={this.onLeave}
+      >
+        {this.props.render(this.state.hovering)}
+      </span>
+    )
+  }
+}
+```
+
+Now, we give a function to the `Hover`'s render prop and return elements to render based on whether it is being hovered or not.
+
+```jsx
+<Hover
+  render={hovering =>
+    hovering
+      ? <h1>Hovering!</h1>
+      : <h2>Not Hovering...</h2>
+  }
+/>
+```
+
+The logic of tracking the hover state is contained within the `Hover` component, and the user of the component only has to be concerned with what to do with the hovered states.
+
+Optionally, instead of defining a specific render prop, the component's children can be used in its place. If following this approach, it should be well documented since it deviates from the standard React pattern.
+
+```jsx
+class Hover extends React.Component {
+  state = { hovering: false }
+
+  onEnter = () => this.setState({ hovering: true })
+  onLeave = () => this.setState({ hovering: false })
+
+  render() {
+    return (
+      <span
+        onMouseEnter={this.onEnter}
+        onMouseLeave={this.onLeave}
+      >
+        {this.props.children(this.state.hovering)}
+      </span>
+    )
+  }
+}
+```
+
+With this change, we simply provide the function as the `Hover` component's children instead of to the render prop.
+
+```jsx
+<Hover>
+  {hovering =>
+    hovering
+      ? <h1>Hovering!</h1>
+      : <h2>Not Hovering...</h2>
+  }
+</Hover>
+```
+
+Functionally, these 2 approaches lead to the same result, but the differing semantics may be clearer for different situations.
