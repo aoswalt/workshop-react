@@ -73,7 +73,7 @@ class LabeledToggle extends React.Component {
   }
 }
 
-const Card = ({ children, title }) => (
+const Card = ({ children, title, header }) => (
   <div
     style={{
       border: '2px dashed black',
@@ -81,7 +81,7 @@ const Card = ({ children, title }) => (
       minHeight: '10rem',
     }}
   >
-    <h3 style={{ textAlign: 'center' }}>{title}</h3>
+    {header || <h3 style={{ textAlign: 'center' }}>{title}</h3>}
     <div style={{ margin: '.5rem' }}>
       {children}
     </div>
@@ -96,7 +96,13 @@ const CardContainer = ({ children }) => (
 
      const App = () => (
       <CardContainer>
-        <Card title='First'>
+        <Card
+          header={
+            <div style={{ textAlign: 'center' }}>
+              <a href='#'>Link Title</a>
+            </div>
+          }
+        >
           <p>A body of text</p>
         </Card>
         <Card title='Second'>

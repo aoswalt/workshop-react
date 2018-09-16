@@ -684,4 +684,39 @@ Making use of children allows for flexible container elements that do not prescr
 
 ### Slots
 
-### Render Prop
+Using the children prop works well when there is one section of a component with varying content. To expose multiple places where the user can insert elements, such as with a layout component, the slots pattern is a straightforward option, simply provide some props that will be placed directly into the DOM.
+
+We can change our `Card` to insert a header instead of only a text title. To keep backwards compatibility, we should keep the option to provide a simple title. If a full header is provided, we will use it; otherwise, we will fall back to using the title. This can be done with a simple short circuit expression.
+
+```jsx
+const Card = ({ children, title, header }) => (
+  <div
+    style={{
+      border: '2px dashed black',
+      flex: '0 0 30%',
+      minHeight: '10rem',
+    }}
+  >
+    {header || <h3 style={{ textAlign: 'center' }}>{title}</h3>}
+    <div style={{ margin: '.5rem' }}>
+      {children}
+    </div>
+  </div>
+)
+```
+
+With that simple addition, the user can override the entire header and provide any elements they want. Let's change the header of the first card to be a centered `a` tag.
+
+```jsx
+<Card
+  header={
+    <div style={{ textAlign: 'center' }}>
+      <a href='#'>Link Title</a>
+    </div>
+  }
+>
+  <p>A body of text</p>
+</Card>
+```
+
+Providing slots for a component allows for separating a different set of concerns to the user.
