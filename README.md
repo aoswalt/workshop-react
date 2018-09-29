@@ -796,3 +796,7 @@ With this change, we simply provide the function as the `Hover` component's chil
 ```
 
 Functionally, these 2 approaches lead to the same result, but the differing semantics may be clearer for different situations.
+
+## Examples
+
+[Reusable Form](./examples/reusable_form.md)
