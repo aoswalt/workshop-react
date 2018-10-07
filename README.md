@@ -370,7 +370,7 @@ We now have a simple button that maintains state and can toggle between its stat
 
 State inside of a React component cannot be accessed from outside of it unless the component accepts related props or passes its state to its children.
 
-Let's make use of the button and by adding a label that reflects the status of the button and sits beside it. We can call this a `LabeledToggle`.
+Let's make use of the button by adding a label that reflects the status of the button and sits beside it. We can call this a `LabeledToggle`.
 
 ```javascript
 class ToggleButton extends React.Component {
