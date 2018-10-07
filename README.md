@@ -240,7 +240,7 @@ Working from top down, we can rewrite our nav menu to make use of JSX.
 
 First, the NavItem component can return HTML as JSX tags. Note: within JSX, variables and direct JavaScript code must be wrapped in curly braces.
 
-```jsx
+```javascript
 const NavItem = ({ href, label }) =>
   <li>
     <a href={href}>{label}</a>
@@ -249,13 +249,13 @@ const NavItem = ({ href, label }) =>
 
 If we continue storing our components as simple variables, we must use curly braces to insert them into the list.
 
-```jsx
+```javascript
 const home = <NavItem href="./home" label="Home" />
 const contact = <NavItem href="./contact" label="Contact" />
 const about = <NavItem href="./about" label="About" />
 ```
 
-```jsx
+```javascript
 const menu =
   <ul>
     {home}
@@ -266,7 +266,7 @@ const menu =
 
 Instead, if we instead write them as components, we use them as their own JSX tags, just like native elements. Note: any custom component should begin with a capital letter to distinguish it from the native elements.
 
-```jsx
+```javascript
 const Home = () => <NavItem href="./home" label="Home" />
 const Contact = () => <NavItem href="./contact" label="Contact" />
 const About = () => <NavItem href="./about" label="About" />
@@ -274,7 +274,7 @@ const About = () => <NavItem href="./about" label="About" />
 
 Now, we can build the menu with our custom components but write them as JSX tags.
 
-```jsx
+```javascript
 const menu =
   <ul>
     <Home />
@@ -295,7 +295,7 @@ Let's make a toggle button.
 
 First, we should create a simple component that wraps a button.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   render() {
     return (
@@ -309,7 +309,7 @@ State must be a plain JavaScript object. With newer JavaScript syntax support, w
 
 Let's track the status with a boolean `value` attribute and default it to `false`.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -325,7 +325,7 @@ class ToggleButton extends React.Component {
 
 We can use a simple ternary to change the button's text to reflect the value of the toggle.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -345,7 +345,7 @@ To update state in React, we must use the `this.setState` function (not update s
 
 For the ToggleButton, we want to toggle state based on previous state. We can create a simple function on the component and pass it to the button.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -372,7 +372,7 @@ State inside of a React component cannot be accessed from outside of it unless t
 
 Let's make use of the button and by adding a label that reflects the status of the button and sits beside it. We can call this a `LabeledToggle`.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -406,7 +406,7 @@ class LabeledToggle extends React.Component {
 
 Now, we have a label that should be reflecting the state of the button, but we cannot react into the button to read its state. We need to track the state within the `LabeledToggle` so that we can pass it to the label. We also need a function similar to the Button's `toggle` that can update the state. Let's call it `updateValue` to be explicit.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -447,7 +447,7 @@ To get the data from the button, we need to pass our `updateValue` to the button
 
 Because setting state is asynchronous, we should call the button's passed in function in the callback to `this.setState` if it exists. The second argument to `this.setState` is an optional function to be called once state is fully updated.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -493,7 +493,7 @@ This approach is fine if we want the button to be the source of truth; however, 
 
 There are various approaches to changing the control of a component, but one of the most direct is to add some checks about which data to respond to and which functions to call.
 
-```jsx
+```javascript
 class ToggleButton extends React.Component {
   state = {
     value: false,
@@ -543,7 +543,7 @@ Now, our `LabeledToggle` maintains the source of truth for the value of the labe
 
 As a proof of concept, we can test it by adding a rough `onClick` event handler to our label's `span` tag. Note: you generally [should not use a raw arrow function for an event handler](https://reactjs.org/docs/handling-events.html).
 
-```jsx
+```javascript
 render() {
   const { value } = this.state
 
@@ -580,7 +580,7 @@ When creating components, we can access the children through the children prop.
 
 As a simple example, if we have a design for a card to be used for items on a page, we can make use of the children prop to allow the user to pass in any elements they want. Let's also add a prop for a card title.
 
-```jsx
+```javascript
 const Card = ({ children, title }) => (
   <div
     style={{
@@ -650,7 +650,7 @@ Putting it all together:
 
 Going further, because the layout of a `Card` and its container are related, we could make the container its own component to treat them as a pair intended to be used together.
 
-```jsx
+```javascript
 const CardContainer = ({ children }) => (
   <div style={{ display: 'flex', flexWrap: 'wrap' }}>
     {children}
@@ -688,7 +688,7 @@ Using the children prop works well when there is one section of a component with
 
 We can change our `Card` to insert a header instead of only a text title. To keep backwards compatibility, we should keep the option to provide a simple title. If a full header is provided, we will use it; otherwise, we will fall back to using the title. This can be done with a simple short circuit expression.
 
-```jsx
+```javascript
 const Card = ({ children, title, header }) => (
   <div
     style={{
@@ -707,7 +707,7 @@ const Card = ({ children, title, header }) => (
 
 With that simple addition, the user can override the entire header and provide any elements they want. Let's change the header of the first card to be a centered `a` tag.
 
-```jsx
+```javascript
 <Card
   header={
     <div style={{ textAlign: 'center' }}>
@@ -727,7 +727,7 @@ At times, there is data whose management could be separated from any display asp
 
 As a simple example, we could create a simple `Hover` component to encapsulate hover logic.
 
-```jsx
+```javascript
 class Hover extends React.Component {
   state = { hovering: false }
 
@@ -749,7 +749,7 @@ class Hover extends React.Component {
 
 Now, we give a function to the `Hover`'s render prop and return elements to render based on whether it is being hovered or not.
 
-```jsx
+```javascript
 <Hover
   render={hovering =>
     hovering
@@ -763,7 +763,7 @@ The logic of tracking the hover state is contained within the `Hover` component,
 
 Optionally, instead of defining a specific render prop, the component's children can be used in its place. If following this approach, it should be well documented since it deviates from the standard React pattern.
 
-```jsx
+```javascript
 class Hover extends React.Component {
   state = { hovering: false }
 
@@ -785,7 +785,7 @@ class Hover extends React.Component {
 
 With this change, we simply provide the function as the `Hover` component's children instead of to the render prop.
 
-```jsx
+```javascript
 <Hover>
   {hovering =>
     hovering
