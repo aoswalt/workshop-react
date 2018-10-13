@@ -2,7 +2,28 @@
 
 A quick workshop to learn the basics of [React](https://reactjs.org).
 
+---
+
+* [Introduction](#introduction) - What we are talking about
+* [Creating Elements](#creating-elements) - Making basic elements
+* [Getting Stylish](#getting-stylish) - Adding inline styles to elements
+* [Elementary Composition](#elementary-composition) - Putting elements together
+* [Props and Components](#props-and-components) - Custom elements and their arguments
+* [Babeling about JSX](#babeling-about-jsx) - Using Babel to allow writing JSX
+* [Getting Stateful](#getting-stateful) - Storing state in components
+* [Sharing with Others](#sharing-with-others) - Sharing state between components
+  * [Taking Full Control](#taking-full-control) - Overring state and state changes
+* [Composition Patterns](#composition-patterns) - Methods of flexibly composing components
+  * [Children](#children) - Accepting elements as children
+  * [Slots](#slots) - Providing slots for inserting elements
+  * [Render Props](#render-props) - Using a function to allow for flexible rendering
+* [Examples](#examples) - Some example designs
+
 ## Introduction
+
+What are we talking about
+
+---
 
 Generally, React is a javascript library for building reactive user interfaces that follow the unidirectional [Flux](https://facebook.github.io/flux/) architecture to efficiently handle changing UI based on changing data.
 
@@ -13,6 +34,10 @@ Any application that can make use of a diffing engine can implement the React ar
 For the remainder of this write up, "React" will describe the entire implemention for the web platform unless specifically noted.
 
 ## Creating Elements
+
+Making basic elements
+
+---
 
 React elements are the building blocks of a React application. Conceptually, they are the same as html elements.
 
@@ -63,6 +88,10 @@ Frequently, the `createElement` and `render` functions will be aliased to make t
 ```
 
 ## Getting Stylish
+
+Adding inline styles to elements
+
+---
 
 A big `h1` element is fun, but we can do more.
 
@@ -115,6 +144,10 @@ React.createElement(
 ```
 
 ## Elementary Composition
+
+Putting elements together
+
+---
 
 Having some text as an element's children is nice for the simple case, but we can do better. HTML elements can contain other elements, and React can too.
 
@@ -190,6 +223,10 @@ Just like regular HTML, we have the makings of a simple nav menu.
 
 ## Props and Components
 
+Custom elements and their arguments
+
+---
+
 A terminology note: The object of properties given to an element translates to the `attributes` on an HTML element. Within React, these are known as `props`.
 
 So far, we have a standard looking set of HTML elements to build a simple nav menu. Because this is javascript, we can extract the common parts into a function to simplify the repetition.
@@ -217,6 +254,10 @@ Components are one of the core parts of react. They allow you to group related l
 
 
 ## Babeling about JSX
+
+Using Babel to allow writing JSX
+
+---
 
 Creating elements with an aliased createElement function is straightforward, but wouldn't it be easier if we could write them as HTML? HTML is not valid inside of JavaScript, but we can use babel to expand JavaScript's capabilities, including making use of JSX.
 
@@ -284,6 +325,10 @@ const menu =
 ```
 
 ## Getting Stateful
+
+Storing state in components
+
+---
 
 So far, we have been creating stateless functional components: they are functions that take in data as props and return React elements. One thing we cannot do is keep track of data changes. For that, we need class components.
 
@@ -367,6 +412,10 @@ class ToggleButton extends React.Component {
 We now have a simple button that maintains state and can toggle between its states, but we do not yet have external access to that state.
 
 ## Sharing with Others
+
+Sharing state between components
+
+---
 
 State inside of a React component cannot be accessed from outside of it unless the component accepts related props or passes its state to its children.
 
@@ -489,6 +538,10 @@ class LabeledToggle extends React.Component {
 
 ### Taking Full Control
 
+Overring state and state changes
+
+---
+
 This approach is fine if we want the button to be the source of truth; however, if we take control of the button's value, we can move the source of truth into a place where we have more control. In general, you want to override both the `onChange` and `value` props together for a component.
 
 There are various approaches to changing the control of a component, but one of the most direct is to add some checks about which data to respond to and which functions to call.
@@ -560,11 +613,19 @@ We can now change the same state with the same funciton but by 2 separate source
 
 ## Composition Patterns
 
+Methods of flexibly composing components
+
+---
+
 So far, our custom components have bundled up their presentation and logic with only allowing minimal control to consumers of the component. This is fine for most cases when you know the uses of your component. A component can be designed for more general cases by separating the logic and presentation.
 
 There are numerous methods to exposing control of a component to its user. 3 of the most common are making use of children, adding slots, and render props.
 
 ### Children
+
+Accepting elements as children
+
+---
 
 We have been making use of childen with the native elements, such as the list items of a list.
 
@@ -684,6 +745,10 @@ Making use of children allows for flexible container elements that do not prescr
 
 ### Slots
 
+Providing slots for inserting elements
+
+---
+
 Using the children prop works well when there is one section of a component with varying content. To expose multiple places where the user can insert elements, such as with a layout component, the slots pattern is a straightforward option, simply provide some props that will be placed directly into the DOM.
 
 We can change our `Card` to insert a header instead of only a text title. To keep backwards compatibility, we should keep the option to provide a simple title. If a full header is provided, we will use it; otherwise, we will fall back to using the title. This can be done with a simple short circuit expression.
@@ -722,6 +787,10 @@ With that simple addition, the user can override the entire header and provide a
 Providing slots for a component allows for separating a different set of concerns to the user.
 
 ### Render Props
+
+Using a function to allow for flexible rendering
+
+---
 
 At times, there is data whose management could be separated from any display aspect.
 
@@ -798,6 +867,10 @@ With this change, we simply provide the function as the `Hover` component's chil
 Functionally, these 2 approaches lead to the same result, but the differing semantics may be clearer for different situations.
 
 ## Examples
+
+Some example designs
+
+---
 
 * [Multiple Use Cards](./examples/multiple_use_cards.md)
 * [Reusable Form](./examples/reusable_form.md)
