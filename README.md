@@ -671,8 +671,11 @@ From a simple `p` tag:
 To an `img` tag:
 
 ```html
-<Card title='First'>
-  <p>A body of text</p>
+<Card title='Second'>
+  <img
+    src='https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+    style={{ maxWidth: '100%', maxHeight: '100%' }}
+  />
 </Card>
 ```
 
