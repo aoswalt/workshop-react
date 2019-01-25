@@ -878,3 +878,11 @@ Some example designs
 * [Multiple Use Cards](./examples/multiple_use_cards.md)
 * [Reusable Form](./examples/reusable_form.md)
 * [Todo List](./examples/todo_list.md)
+
+## Supplements
+
+Extra bits after getting the basics down
+
+---
+
+* [API Requests](./supplements/api_requests.md)
