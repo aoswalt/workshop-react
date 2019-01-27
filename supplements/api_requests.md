@@ -254,3 +254,60 @@ addTodo = () => {
       })))
 }
 ```
+
+## Showing Errors
+
+Usually, you will want to let the user know when something goes wrong. We can easily create a temporary message with a state property.
+
+```javascript
+state = {
+  newTodoText: '',
+  todos: [],
+  errorMessage: '',
+}
+```
+
+And a timeout.
+
+```javascript
+showErrorMessage = (error) => {
+  this.setState({ errorMessage: error.message })
+  setTimeout(() => this.setState({ errorMessage: '' }), 500)
+}
+```
+
+Using the `showErrorMessage` function in the `.catch()` method takes care of the error handling within the component.
+
+```javascript
+getAllTodos()
+  .then(todos => this.setState({ todos }))
+  .catch(this.showErrorMessage)
+```
+
+The error message can be displayed by dropping it into the render method.
+
+```javascript
+render() {
+  const { errorMessage, newTodoText, todos } = this.state
+
+  return (
+    <div>
+      <div>
+        <input type="text" onChange={this.updateNewTodo} value={newTodoText}/>
+        <button onClick={this.addTodo}>Add</button>
+        <div>{errorMessage}</div>
+      </div>
+      <div>
+        {todos.map(todo =>
+          <div key={todo.id}>
+            <button onClick={() => this.removeTodo(todo.id)}>X</button>
+            {todo.text}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+Even with such rudimentary error handling, the user can be informed that something went wrong.
