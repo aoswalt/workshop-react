@@ -186,3 +186,24 @@ const deleteTodo = id =>
 ```
 
 Note: Axios has a [more complex errors](https://github.com/axios/axios#handling-errors).
+
+## Using the Functions
+
+Within our component, only minimal changes are needed to use the api functions.
+
+### Initial Data Loading
+
+Because we only have one component and want to immediately load our data, we can put our get request inside `componentDidMount`.
+
+```javascript
+componentDidMount() {
+  API.getAllTodos()
+    .then(todos => this.setState({ todos }))
+}
+```
+
+**Care should be taken when deciding when to automatically load data.**
+
+Since we are at the top of the application, we can load data when the component mounts and move on. If we had multiple pages, we may consider loading data when different pages load and even storing the data at the top of the app but loading it further down.
+
+If a child component is loading data on mount, it will load data _every time every instance of the component is mounted_. This could be excessive for items in a list, _especially_ if the data is already loaded, such as with the todos on our todo list.
