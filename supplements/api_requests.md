@@ -207,3 +207,50 @@ componentDidMount() {
 Since we are at the top of the application, we can load data when the component mounts and move on. If we had multiple pages, we may consider loading data when different pages load and even storing the data at the top of the app but loading it further down.
 
 If a child component is loading data on mount, it will load data _every time every instance of the component is mounted_. This could be excessive for items in a list, _especially_ if the data is already loaded, such as with the todos on our todo list.
+
+### Deleting
+
+Starting with probably the simplest change, let's take care of deleting todos.
+
+Our logic for upating state can stay the same: filter out the todo with the matching id. The only change needed is to wait until we get a successful response from the api.
+
+```javascript
+removeTodo = removeId =>
+  API.deleteTodo(removeId)
+    .then(() => this.setState(({ todos }) => ({
+      todos: todos.filter(({ id }) => id !== removeId)
+    })))
+```
+
+### Adding and Updating
+
+Both adding and updating a todo require the same type of minimal change: using the response from the api to update state.
+
+Since our upate function does read from state, it is a bit more trivial. Instead of constructing the todo, we need to use the updated one returned from the api.
+
+```javascript
+updateTodo = (id, newText) =>
+  API.updateTodo(id, newText)
+    .then(updatedTodo =>
+      this.setState(({ todos }) => ({
+        todos: todos.map(todo =>
+          todo.id === updatedTodo.id ? updatedTodo : todo,
+        ),
+      })),
+    )
+```
+
+Adding a new todo is nearly the same change as updating except we need to pull the new text out of state first. We do not need to embed the api call inside of the setState function because the state update is happening asynchronously.
+
+```javascript
+addTodo = () => {
+  const { newTodoText } = this.state
+
+  API.createTodo(newTodoText)
+    .then(newTodoText =>
+      this.setState(({ todos, nextId }) => ({
+        newTodoText: '',
+        todos: [...todos, newTodo],
+      })))
+}
+```
