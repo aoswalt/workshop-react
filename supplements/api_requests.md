@@ -11,15 +11,15 @@ Let's start with the classic todo list.
 ```javascript
 class TodoList extends React.Component {
   state = {
-    newTodo: '',
+    newTodoText: '',
     todos: [],
     nextId: 1,
   }
 
   addTodo = () => {
-    this.setState(({ newTodo, todos, nextId }) => ({
-      newTodo: '',
-      todos: [...todos, { id: nextId, text: newTodo }],
+    this.setState(({ newTodoText, todos, nextId }) => ({
+      newTodoText: '',
+      todos: [...todos, { id: nextId, text: newTodoText }],
       nextId: nextId + 1,
     }))
   }
@@ -35,15 +35,15 @@ class TodoList extends React.Component {
       todos: todos.map(todo => (todo.id === id ? { ...todo, newText } : todo)),
     }))
 
-  updateNewTodo = e => this.setState({ newTodo: e.target.value })
+  updateNewTodo = e => this.setState({ newTodoText: e.target.value })
 
   render() {
-    const { newTodo, todos } = this.state
+    const { newTodoText, todos } = this.state
 
     return (
       <div>
         <div>
-          <input type="text" onChange={this.updateNewTodo} value={newTodo} />
+          <input type="text" onChange={this.updateNewTodo} value={newTodoText} />
           <button onClick={this.addTodo}>Add</button>
         </div>
         <div>
