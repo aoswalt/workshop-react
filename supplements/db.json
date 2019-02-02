@@ -1,0 +1,16 @@
+{
+  "todos": [
+    {
+      "text": "The first thing to do",
+      "id": 1
+    },
+    {
+      "text": "Doing things",
+      "id": 2
+    },
+    {
+      "text": "Moar stuff to do",
+      "id": 3
+    }
+  ]
+}

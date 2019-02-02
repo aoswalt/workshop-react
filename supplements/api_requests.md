@@ -321,3 +321,7 @@ By containing all of the logic in one place, the implmentation can be changed wi
 Starting with React state also encourages us to make more use of the tools built into React, primarily state updates. Relying on refetching data after making changes loses that benefit and requires more round-trips to the api.
 
 Working with apis should fit neatly into your application. If the api logic seems to be making things difficult, it may be time to take a step back and rethink what you are trying to accomplish and how you are going about it.
+
+### More Complete Example
+
+[./index.html](Here) is a more complete example of the list above. It has full CRUD actions with an api but no styling and rough UX.

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Todo with API</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+  <div id="root" />
+  <script type="text/babel">
+const API = {
+  getAllTodos: () =>
+    fetch('http://localhost:3000/todos')
+      .then(response => response.json())
+      .catch(error => {
+        console.error(error)
+        throw error
+      }),
+
+  createTodo: text =>
+    fetch('http://localhost:3000/todos', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+      headers:{
+      'Content-Type': 'application/json'
+      },
+    })
+      .then(response => response.json())
+      .catch(error => {
+        console.error(error)
+        throw error
+      }),
+
+  updateTodo: (id, text) =>
+    fetch(`http://localhost:3000/todos/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ text }),
+      headers:{
+      'Content-Type': 'application/json'
+      },
+    })
+      .then(response => response.json())
+      .catch(error => {
+        console.error(error)
+        throw error
+      }),
+
+  deleteTodo: id =>
+    fetch(`http://localhost:3000/todos/${id}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .catch(error => {
+        console.error(error)
+        throw error
+      }),
+}
+
+class NewTodoEntry extends React.Component {
+  state = {
+    text: '',
+  }
+
+  onAdd = () => {
+    this.props.addTodo(this.state.text)
+      .then(() => this.setState({ text: '' }))
+  }
+
+  onUpdateText = e => this.setState({ text: e.target.value })
+
+  render() {
+    return (
+      <div>
+        <input
+          type="text"
+          onChange={this.onUpdateText}
+          value={this.state.text}
+          />
+        <button onClick={this.onAdd}>Add</button>
+      </div>
+    )
+  }
+}
+
+class TodoItem extends React.Component {
+  state = {
+    isEditing: false,
+    editText: this.props.todo.text,
+  }
+
+  onCancelEdit = () => this.setState({ isEditing: false })
+
+  onConfirmEdit = () => {
+    const { updateTodo, todo } = this.props
+    const { editText } = this.state
+
+    updateTodo(todo.id, editText)
+      .then(() => this.setState({ isEditing: false }))
+  }
+
+  onDelete = () => {
+    const { deleteTodo, todo } = this.props
+    deleteTodo(todo.id)
+  }
+
+  onStartEdit = () => this.setState({
+    isEditing: true,
+    editText: this.props.todo.text,
+  })
+
+  onUpdateText = e => this.setState({ editText: e.target.value })
+
+  render() {
+    if (this.state.isEditing) {
+      return (
+        <div>
+          <button onClick={this.onCancelEdit}>x</button>
+          <input
+            type="text"
+            onChange={this.onUpdateText}
+            value={this.state.editText}
+            />
+          <button onClick={this.onConfirmEdit}>Ok</button>
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        <button onClick={this.onDelete}>X</button>
+        {this.props.todo.text}
+        <button onClick={this.onStartEdit}>Edit</button>
+      </div>
+    )
+  }
+}
+
+class TodoList extends React.Component {
+  state = {
+    todos: [],
+    errorMessage: '',
+  }
+
+  showErrorMessage = (errorMessage) => {
+    this.setState({ errorMessage })
+    setTimeout(() => this.setState({ errorMessage: '' }), 2500)
+  }
+
+  componentDidMount() {
+    API.getAllTodos()
+      .then(todos => this.setState({ todos }))
+      .catch(error => {
+        this.showErrorMessage('Could not get todo list')
+        throw error
+      })
+  }
+
+  addTodo = text =>
+    API.createTodo(text)
+      .then(todo => this.setState(({ todos }) => ({ todos: [...todos, todo] })))
+      .catch(error => {
+        this.setErrorMessage('Could not create todo')
+        throw error
+      })
+
+  deleteTodo = deleteId =>
+    API.deleteTodo(deleteId)
+      .then(() => this.setState(({ todos }) => ({
+        todos: todos.filter(({ id }) => id !== deleteId)
+      })))
+      .catch(error => {
+        this.setErrorMessage('Could not create todo')
+        throw error
+      })
+
+  updateTodo = (id, newText) =>
+    API.updateTodo(id, newText)
+      .then(updatedTodo => this.setState(({ todos }) => ({
+        todos: todos.map(todo =>
+          todo.id === updatedTodo.id ? updatedTodo : todo
+        )
+      })))
+      .catch(error => {
+        this.setErrorMessage('Could not create todo')
+        throw error
+      })
+
+  render() {
+    const { errorMessage, newTodo, todos } = this.state
+
+    return (
+      <div>
+        <NewTodoEntry addTodo={this.addTodo} />
+        <div>{errorMessage}</div>
+        <div>
+          {todos.map(todo =>
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              deleteTodo={this.deleteTodo}
+              updateTodo={this.updateTodo}
+            />
+          )}
+        </div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<TodoList />, document.querySelector("#root"))
+  </script>
+</body>
+</html>
