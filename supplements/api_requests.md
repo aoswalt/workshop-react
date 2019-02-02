@@ -311,3 +311,13 @@ render() {
 ```
 
 Even with such rudimentary error handling, the user can be informed that something went wrong.
+
+## Summarizing
+
+Changing the todo functionality to work with the api required no change to the function signatures; the changes were all internal to the logic of the functions. This means that we could have given these functions to other components and had no need to change those components when the switch to an api was made.
+
+By containing all of the logic in one place, the implmentation can be changed without requiring changes in other parts of the application. Since we started with React state, we were forced to already have all of that logic together. When starting with the api, it can be tempting to scatter the api calls, distributing the logic across the application.
+
+Starting with React state also encourages us to make more use of the tools built into React, primarily state updates. Relying on refetching data after making changes loses that benefit and requires more round-trips to the api.
+
+Working with apis should fit neatly into your application. If the api logic seems to be making things difficult, it may be time to take a step back and rethink what you are trying to accomplish and how you are going about it.
