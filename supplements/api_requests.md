@@ -324,4 +324,4 @@ Working with apis should fit neatly into your application. If the api logic seem
 
 ### More Complete Example
 
-[./index.html](Here) is a more complete example of the list above. It has full CRUD actions with an api but no styling and rough UX.
+[Here](./index.html) is a more complete example of the list above. It has full CRUD actions with an api but no styling and rough UX.
