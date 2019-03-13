@@ -32,7 +32,7 @@ class TodoList extends React.Component {
   // left out of ui for example simplicity
   updateTodo = (id, newText) =>
     this.setState(({ todos }) => ({
-      todos: todos.map(todo => (todo.id === id ? { ...todo, newText } : todo)),
+      todos: todos.map(todo => (todo.id === id ? { ...todo, text: newText } : todo)),
     }))
 
   updateNewTodo = e => this.setState({ newTodoText: e.target.value })
